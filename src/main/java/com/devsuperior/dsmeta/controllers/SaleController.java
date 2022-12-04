@@ -31,12 +31,12 @@ public class SaleController {
 	}
 
 	@GetMapping(value = "/report")
-	public ResponseEntity<Page<SaleMinDTO>> getReport(@RequestParam(name = "minDate") String minDate, @RequestParam(name = "maxDate") String maxDate, @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
+	public ResponseEntity<Page<SaleMinDTO>> getReport(@RequestParam(name = "minDate", required = false) String minDate, @RequestParam(name = "maxDate", required = false) String maxDate, @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.searchReport(minDate, maxDate, name, pageable));
 	}
 
 	@GetMapping(value = "/summary")
-	public ResponseEntity<List<SaleSumaryDTO>> getSummary(@RequestParam(name = "minDate") String minDate, @RequestParam(name = "maxDate") String maxDate) {
+	public ResponseEntity<List<SaleSumaryDTO>> getSummary(@RequestParam(name = "minDate", required = false) String minDate, @RequestParam(name = "maxDate", required = false) String maxDate) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.searchSumary(minDate, maxDate));
 	}
 }
