@@ -28,44 +28,36 @@ public class SaleService {
 	}
 
 	public List<SaleSumaryDTO> searchSumary(String minDate, String maxDate){
-		LocalDate now = LocalDate.now(ZoneId.of("UTC"));
-		LocalDate min = null;
-		LocalDate max = null;
-
-		if(minDate != null){
-			min = minDate.equals("") ? now.minusDays(365) : LocalDate.parse(minDate);
-		}else{
-			min = now.minusDays(365);
-		}
-
-		if(maxDate != null){
-			max = maxDate.equals("") ? now : LocalDate.parse(maxDate);
-		}else{
-			max = now;
-		}
+		LocalDate min = this.validateMinDate(minDate);
+		LocalDate max = this.validateMaxDate(maxDate);
 
 		return repository.searchSumary(min, max).stream().map(x -> new SaleSumaryDTO(x)).toList();
 	}
 
-	public Page<SaleMinDTO> searchReport(String minDate, String maxDate, String name, Pageable pageable){
+	public Page<SaleMinDTO> searchReport(String minDate, String maxDate, String name, Pageable pageable){		
+		LocalDate min = this.validateMinDate(minDate);
+		LocalDate max = this.validateMaxDate(maxDate);
+
+		return repository.searchReport(min, max, name, pageable);
+	}
+
+	private LocalDate validateMinDate(String minDate){
 		LocalDate now = LocalDate.now(ZoneId.of("UTC"));
-		LocalDate min = null;
-		LocalDate max = null;
-
+		
 		if(minDate != null){
-			min = minDate.equals("") ? now.minusDays(365) : LocalDate.parse(minDate);
+			return minDate.equals("") ? now.minusDays(365) : LocalDate.parse(minDate);
 		}else{
-			min = now.minusDays(365);
+			return now.minusDays(365);
 		}
+	}
 
+	private LocalDate validateMaxDate(String maxDate){
+		LocalDate now = LocalDate.now(ZoneId.of("UTC"));
+		
 		if(maxDate != null){
-			max = maxDate.equals("") ? now : LocalDate.parse(maxDate);
+			return maxDate.equals("") ? now : LocalDate.parse(maxDate);
 		}else{
-			max = now;
+			return now;
 		}
-
-		Page<SaleMinDTO> result = repository.searchReport(min, max, name, pageable);
-
-		return result;
 	}
 }
